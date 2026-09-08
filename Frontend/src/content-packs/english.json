@@ -1,0 +1,80 @@
+{
+  "id": "english",
+  "language": "English",
+  "name": "English / Generic Pack",
+  "objects": [
+    { "id": "cup", "label": "Tea Cup", "emoji": "☕" },
+    { "id": "book", "label": "Book", "emoji": "📚" },
+    { "id": "key", "label": "House Key", "emoji": "🔑" },
+    { "id": "glasses", "label": "Spectacles", "emoji": "👓" },
+    { "id": "clock", "label": "Wall Clock", "emoji": "🕐" },
+    { "id": "umbrella", "label": "Umbrella", "emoji": "☂️" },
+    { "id": "medicine_box", "label": "Medicine Box", "emoji": "💊" },
+    { "id": "phone", "label": "Phone", "emoji": "📱" },
+    { "id": "comb", "label": "Comb", "emoji": "🪮" },
+    { "id": "wallet", "label": "Wallet", "emoji": "👛" }
+  ],
+  "foods": [
+    { "id": "dal", "label": "Dal & Rice", "emoji": "🍚" },
+    { "id": "roti", "label": "Roti & Vegetables", "emoji": "🫓" },
+    { "id": "porridge", "label": "Porridge", "emoji": "🥣" },
+    { "id": "soup", "label": "Vegetable Soup", "emoji": "🍵" },
+    { "id": "fruit", "label": "Seasonal Fruit", "emoji": "🍎" },
+    { "id": "biscuits", "label": "Tea Biscuits", "emoji": "🍪" },
+    { "id": "yogurt", "label": "Yogurt / Curd", "emoji": "🥛" },
+    { "id": "sandwich", "label": "Sandwich", "emoji": "🥪" }
+  ],
+  "festivals": [
+    { "id": "diwali", "name": "Diwali", "month": 10, "emoji": "🪔", "description": "Festival of lights celebrated with diyas and fireworks" },
+    { "id": "holi", "name": "Holi", "month": 3, "emoji": "🌈", "description": "Festival of colours marking the arrival of spring" },
+    { "id": "christmas", "name": "Christmas", "month": 12, "emoji": "🎄", "description": "Christian celebration of the birth of Jesus" },
+    { "id": "eid", "name": "Eid", "month": 4, "emoji": "🌙", "description": "Islamic festival marking the end of Ramadan" },
+    { "id": "new_year", "name": "New Year", "month": 1, "emoji": "🎆", "description": "New Year celebrations with family and friends" },
+    { "id": "independence", "name": "Independence Day", "month": 8, "emoji": "🏳️", "description": "National day celebrating independence" }
+  ],
+  "songs": [
+    { "id": "twinkle", "title": "Twinkle Twinkle Little Star", "artist": "Traditional" },
+    { "id": "old_macdonald", "title": "Old MacDonald Had a Farm", "artist": "Traditional" },
+    { "id": "happy_birthday", "title": "Happy Birthday", "artist": "Traditional" },
+    { "id": "jana_gana", "title": "Jana Gana Mana", "artist": "National Anthem" },
+    { "id": "vande", "title": "Vande Mataram", "artist": "Traditional Patriotic" }
+  ],
+  "textiles": [
+    { "id": "cotton_weave", "label": "Cotton Weave Pattern", "emoji": "🧵" },
+    { "id": "stripe", "label": "Stripe Pattern", "emoji": "🟦" },
+    { "id": "check", "label": "Check Pattern", "emoji": "🏁" },
+    { "id": "floral", "label": "Floral Embroidery", "emoji": "🌸" },
+    { "id": "plain", "label": "Plain Weave", "emoji": "⬜" }
+  ],
+  "landmarks": [
+    { "id": "local_temple", "label": "Local Temple", "emoji": "⛩️" },
+    { "id": "market", "label": "Town Market", "emoji": "🏪" },
+    { "id": "park", "label": "Community Park", "emoji": "🌳" },
+    { "id": "school", "label": "Village School", "emoji": "🏫" },
+    { "id": "river", "label": "Nearby River", "emoji": "🌊" }
+  ],
+  "routineSteps": [
+    { "id": "wake", "label": "Wake Up & Morning Prayers", "emoji": "🙏" },
+    { "id": "tea", "label": "Morning Tea", "emoji": "☕" },
+    { "id": "bath", "label": "Bath & Getting Ready", "emoji": "🚿" },
+    { "id": "breakfast", "label": "Breakfast", "emoji": "🍽️" },
+    { "id": "medicine", "label": "Morning Medicine", "emoji": "💊" },
+    { "id": "walk", "label": "Morning Walk", "emoji": "🚶" },
+    { "id": "lunch", "label": "Lunch", "emoji": "🍛" },
+    { "id": "rest", "label": "Afternoon Rest", "emoji": "😴" },
+    { "id": "tea2", "label": "Evening Tea & Snack", "emoji": "🫖" },
+    { "id": "activity", "label": "Activity / Game Time", "emoji": "🎮" },
+    { "id": "dinner", "label": "Dinner", "emoji": "🌙" },
+    { "id": "medicine2", "label": "Night Medicine", "emoji": "💊" },
+    { "id": "sleep", "label": "Bedtime", "emoji": "🛏️" }
+  ],
+  "sounds": [
+    { "id": "bell", "label": "Temple Bell", "emoji": "🔔", "category": "cultural" },
+    { "id": "rain", "label": "Rainfall", "emoji": "🌧️", "category": "nature" },
+    { "id": "birds", "label": "Morning Birds", "emoji": "🐦", "category": "nature" },
+    { "id": "market", "label": "Busy Market", "emoji": "🏪", "category": "cultural" },
+    { "id": "train", "label": "Train Whistle", "emoji": "🚂", "category": "transport" },
+    { "id": "cow", "label": "Cow & Farm", "emoji": "🐄", "category": "nature" },
+    { "id": "flute", "label": "Folk Flute", "emoji": "🎵", "category": "instrument" }
+  ]
+}

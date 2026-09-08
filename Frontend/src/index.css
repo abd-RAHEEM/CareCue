@@ -1,0 +1,182 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+
+  /* CareCue Palette */
+  --color-brand-50: #f0f4ff;
+  --color-brand-100: #e0e9ff;
+  --color-brand-200: #c7d7fe;
+  --color-brand-300: #a5b9fc;
+  --color-brand-400: #8191f8;
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+  --color-brand-700: #4338ca;
+  --color-brand-800: #3730a3;
+  --color-brand-900: #312e81;
+
+  --color-calm-50: #f0fdf9;
+  --color-calm-100: #ccfbef;
+  --color-calm-200: #99f6df;
+  --color-calm-300: #5eead4;
+  --color-calm-400: #2dd4bf;
+  --color-calm-500: #14b8a6;
+  --color-calm-600: #0d9488;
+
+  --color-warm-50: #fffbeb;
+  --color-warm-100: #fef3c7;
+  --color-warm-200: #fde68a;
+  --color-warm-300: #fcd34d;
+  --color-warm-400: #fbbf24;
+  --color-warm-500: #f59e0b;
+
+  --color-alert-red: #ef4444;
+  --color-alert-yellow: #f59e0b;
+  --color-alert-green: #22c55e;
+
+  /* Spacing */
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.75rem;
+  --radius-3xl: 2.5rem;
+}
+
+:root {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background-color: #f8faff;
+  color: #1e1b4b;
+}
+
+/* Patient UI - accessibility overrides */
+.patient-ui {
+  font-size: 1.25rem;
+  line-height: 1.7;
+}
+
+.patient-ui button, .patient-ui .touch-target {
+  min-height: 64px;
+  min-width: 64px;
+  font-size: 1.2rem;
+}
+
+/* Scroll-reveal base states */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.32,0.72,0,1), transform 0.7s cubic-bezier(0.32,0.72,0,1);
+}
+.reveal-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Glass card */
+.glass-card {
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.85);
+  box-shadow: 0 4px 24px rgba(99,102,241,0.08), 0 1px 4px rgba(0,0,0,0.04);
+}
+
+/* Double-bezel card */
+.bezel-card {
+  background: rgba(99,102,241,0.04);
+  border: 1px solid rgba(99,102,241,0.12);
+  padding: 6px;
+  border-radius: 2rem;
+}
+.bezel-inner {
+  background: white;
+  border-radius: calc(2rem - 6px);
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.9);
+  overflow: hidden;
+}
+
+/* Gradient backgrounds */
+.bg-patient-gradient {
+  background: linear-gradient(135deg, #e0e9ff 0%, #f0fdf9 50%, #fffbeb 100%);
+}
+.bg-caregiver-gradient {
+  background: linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%);
+}
+.bg-hw-gradient {
+  background: linear-gradient(135deg, #f8faff 0%, #f0fdf9 100%);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.25); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,0.4); }
+
+/* Focus visible */
+:focus-visible {
+  outline: 3px solid #6366f1;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+/* Animations */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-slide-up { animation: fadeSlideUp 0.6s cubic-bezier(0.32,0.72,0,1) both; }
+.animate-pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
+.animate-spin-slow { animation: spin-slow 8s linear infinite; }
+
+/* Stagger delays */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-600 { animation-delay: 0.6s; }
+.delay-700 { animation-delay: 0.7s; }
+
+/* Prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal-up { opacity: 1; transform: none; }
+}
+
+/* Recharts customization */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  border-radius: 0.75rem !important;
+  border: 1px solid rgba(99,102,241,0.15) !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08) !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+}

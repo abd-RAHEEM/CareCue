@@ -1,0 +1,80 @@
+{
+  "id": "assamese",
+  "language": "Assamese",
+  "name": "Assamese / NER Pack",
+  "objects": [
+    { "id": "xorai", "label": "Xorai (Brass Tray)", "emoji": "🫙" },
+    { "id": "jaapi", "label": "Jaapi (Conical Hat)", "emoji": "🎩" },
+    { "id": "gamosa", "label": "Gamosa (Cloth)", "emoji": "🧣" },
+    { "id": "dhol", "label": "Dhol (Drum)", "emoji": "🥁" },
+    { "id": "pepa", "label": "Pepa (Flute)", "emoji": "🎵" },
+    { "id": "brass_lamp", "label": "Banti (Oil Lamp)", "emoji": "🕯️" },
+    { "id": "fishing_net", "label": "Jal (Fishing Net)", "emoji": "🎣" },
+    { "id": "bamboo_basket", "label": "Khomari (Bamboo Basket)", "emoji": "🧺" },
+    { "id": "clay_pot", "label": "Ghila (Clay Pot)", "emoji": "🏺" },
+    { "id": "spindle", "label": "Tongle (Weaving Spindle)", "emoji": "🧵" }
+  ],
+  "foods": [
+    { "id": "pitha", "label": "Pitha (Rice Cake)", "emoji": "🍡" },
+    { "id": "laru", "label": "Laru (Sweet Ball)", "emoji": "🍬" },
+    { "id": "masor_tenga", "label": "Masor Tenga (Sour Fish Curry)", "emoji": "🐟" },
+    { "id": "duck_curry", "label": "Hah Logon (Duck Curry)", "emoji": "🦆" },
+    { "id": "rice_beer", "label": "Apong (Rice Beer)", "emoji": "🍶" },
+    { "id": "jolpan", "label": "Jolpan (Morning Snack)", "emoji": "🥣" },
+    { "id": "khar", "label": "Khar (Alkaline Dish)", "emoji": "🫕" },
+    { "id": "chira", "label": "Chira (Flattened Rice)", "emoji": "🌾" }
+  ],
+  "festivals": [
+    { "id": "bihu_bohag", "name": "Bohag Bihu", "month": 4, "emoji": "🌸", "description": "Spring festival celebrating Assamese New Year, with Bihu dance and traditional music" },
+    { "id": "bihu_magh", "name": "Magh Bihu", "month": 1, "emoji": "🔥", "description": "Harvest festival with community feast and Meji bonfire" },
+    { "id": "bihu_kati", "name": "Kati Bihu", "month": 10, "emoji": "🕯️", "description": "Autumn Bihu with earthen lamps lit for crops" },
+    { "id": "eid", "name": "Eid", "month": 4, "emoji": "🌙", "description": "Islamic festival celebrated across Assam" },
+    { "id": "durga_puja", "name": "Durga Puja", "month": 10, "emoji": "🪔", "description": "Nine-day Hindu festival honouring goddess Durga" },
+    { "id": "ali_ai_ligang", "name": "Ali-Ai-Ligang", "month": 2, "emoji": "🌾", "description": "Mising community's spring sowing festival" }
+  ],
+  "songs": [
+    { "id": "bihu_song_1", "title": "O Mur Apunar Desh", "artist": "Traditional Bihu" },
+    { "id": "bihu_song_2", "title": "Mur Baidew Kuwoli Asil", "artist": "Traditional Bihu" },
+    { "id": "bargeet_1", "title": "Keshava Madhava", "artist": "Srimanta Sankardeva" },
+    { "id": "modern_1", "title": "Ei Xubha Lagone", "artist": "Zubeen Garg" },
+    { "id": "lullaby_1", "title": "Aai Mur Aai", "artist": "Traditional Lullaby" }
+  ],
+  "textiles": [
+    { "id": "muga_silk", "label": "Muga Silk Mekhela", "emoji": "🪡" },
+    { "id": "pat_silk", "label": "Pat Silk Saree", "emoji": "🪡" },
+    { "id": "eri_silk", "label": "Eri Silk Sador", "emoji": "🧶" },
+    { "id": "gamosa_cloth", "label": "Gamosa Pattern", "emoji": "🟥" },
+    { "id": "jamdani", "label": "Jamdani Weave", "emoji": "🎨" }
+  ],
+  "landmarks": [
+    { "id": "kamakhya", "label": "Kamakhya Temple, Guwahati", "emoji": "⛩️" },
+    { "id": "kaziranga", "label": "Kaziranga National Park", "emoji": "🦏" },
+    { "id": "majuli", "label": "Majuli River Island", "emoji": "🏝️" },
+    { "id": "sivasagar", "label": "Sivasagar Talatal Ghar", "emoji": "🏰" },
+    { "id": "brahmaputra", "label": "Brahmaputra River", "emoji": "🌊" }
+  ],
+  "routineSteps": [
+    { "id": "wake", "label": "Wake Up & Morning Prayers", "emoji": "🙏" },
+    { "id": "tea", "label": "Morning Tea", "emoji": "☕" },
+    { "id": "bath", "label": "Bath & Getting Ready", "emoji": "🚿" },
+    { "id": "breakfast", "label": "Breakfast", "emoji": "🍽️" },
+    { "id": "medicine", "label": "Morning Medicine", "emoji": "💊" },
+    { "id": "walk", "label": "Morning Walk", "emoji": "🚶" },
+    { "id": "lunch", "label": "Lunch", "emoji": "🍛" },
+    { "id": "rest", "label": "Afternoon Rest", "emoji": "😴" },
+    { "id": "tea2", "label": "Evening Tea & Snack", "emoji": "🫖" },
+    { "id": "activity", "label": "Activity / Game Time", "emoji": "🎮" },
+    { "id": "dinner", "label": "Dinner", "emoji": "🌙" },
+    { "id": "medicine2", "label": "Night Medicine", "emoji": "💊" },
+    { "id": "sleep", "label": "Bedtime", "emoji": "🛏️" }
+  ],
+  "sounds": [
+    { "id": "dhol_sound", "label": "Dhol Beat", "emoji": "🥁", "category": "instrument" },
+    { "id": "pepa_sound", "label": "Pepa Flute", "emoji": "🎵", "category": "instrument" },
+    { "id": "rain", "label": "Rain on Tin Roof", "emoji": "🌧️", "category": "nature" },
+    { "id": "river", "label": "Brahmaputra River", "emoji": "🌊", "category": "nature" },
+    { "id": "birds", "label": "Morning Birds", "emoji": "🐦", "category": "nature" },
+    { "id": "temple_bell", "label": "Temple Bell", "emoji": "🔔", "category": "cultural" },
+    { "id": "market", "label": "Village Market", "emoji": "🏪", "category": "cultural" }
+  ]
+}
