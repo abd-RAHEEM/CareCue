@@ -15,10 +15,15 @@ class AICompanionService:
 
         if self.api_key:
             try:
-                from google import genai
+                import google.genai as genai  # google-genai package
                 self.client = genai.Client(api_key=self.api_key)
+                print("Gemini client initialized successfully.")
+            except ImportError:
+                print("Warning: google-genai package not installed. Install with: pip install google-genai")
+                self.client = None
             except Exception as e:
                 print(f"Warning: Could not initialize Gemini client: {e}")
+                self.client = None
 
     def _get_role_prompt(self, role: str) -> str:
         if role == "patient":
