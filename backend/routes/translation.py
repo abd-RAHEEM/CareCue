@@ -1,11 +1,6 @@
 from fastapi import APIRouter, HTTPException
-
-try:
-    from backend.models.chat_models import TranslationRequest, TranslationResponse
-    from backend.services.sarvam_service import SarvamService
-except ImportError:
-    from models.chat_models import TranslationRequest, TranslationResponse
-    from services.sarvam_service import SarvamService
+from models.chat_models import TranslationRequest, TranslationResponse
+from services.sarvam_service import SarvamService
 
 router = APIRouter()
 
@@ -16,10 +11,8 @@ sarvam_service = SarvamService()
 async def translate(request: TranslationRequest):
     if not request.text or not request.text.strip():
         raise HTTPException(status_code=400, detail="text cannot be empty")
-
     if not request.source_language:
         raise HTTPException(status_code=400, detail="source_language is required")
-
     if not request.target_language:
         raise HTTPException(status_code=400, detail="target_language is required")
 
@@ -29,7 +22,6 @@ async def translate(request: TranslationRequest):
             source_language=request.source_language,
             target_language=request.target_language
         )
-
         return TranslationResponse(
             translated_text=translated_text,
             source_language=request.source_language,

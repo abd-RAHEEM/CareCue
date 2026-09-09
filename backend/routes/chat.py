@@ -1,13 +1,7 @@
 from fastapi import APIRouter, HTTPException
-
-try:
-    from backend.models.chat_models import ChatRequest, ChatResponse
-    from backend.services.ai_companion_service import AICompanionService
-    from backend.services.context_service import ContextService
-except ImportError:
-    from models.chat_models import ChatRequest, ChatResponse
-    from services.ai_companion_service import AICompanionService
-    from services.context_service import ContextService
+from models.chat_models import ChatRequest, ChatResponse
+from services.ai_companion_service import AICompanionService
+from services.context_service import ContextService
 
 router = APIRouter()
 
@@ -35,7 +29,6 @@ async def _process_chat_request(request: ChatRequest):
             patient_context=patient_context,
             language=request.language
         )
-
         return ChatResponse(
             patient_id=request.patient_id,
             role=request.role,
@@ -44,9 +37,8 @@ async def _process_chat_request(request: ChatRequest):
         )
     except Exception as e:
         error_str = str(e)
-        # Check if it's a quota error (429)
         if "429" in error_str or "RESOURCE_EXHAUSTED" in error_str or "quota" in error_str.lower():
-            raise HTTPException(status_code=429, detail="Gemini API quota exceeded. Please try again later or upgrade to a paid plan.")
+            raise HTTPException(status_code=429, detail="Gemini API quota exceeded. Please try again later.")
         else:
             raise HTTPException(status_code=500, detail=f"Failed to generate response: {str(e)}")
 

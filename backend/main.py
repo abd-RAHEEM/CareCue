@@ -1,12 +1,10 @@
 import sys
 import os
 
-# Ensure both repo root and backend directory are in sys.path
-backend_dir = os.path.dirname(os.path.abspath(__file__))
-root_dir = os.path.dirname(backend_dir)
-for p in [root_dir, backend_dir]:
-    if p not in sys.path:
-        sys.path.insert(0, p)
+# Ensure the backend directory itself is in sys.path for relative imports
+_here = os.path.dirname(os.path.abspath(__file__))
+if _here not in sys.path:
+    sys.path.insert(0, _here)
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -14,14 +12,16 @@ load_dotenv()
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-try:
-    from backend.routes import chat, translation, speech
-except ImportError:
-    from routes import chat, translation, speech
+from routes import chat, translation, speech
 
-app = FastAPI(title="SIH AI Companion API", version="1.0.0", docs_url="/docs", openapi_url="/openapi.json")
+app = FastAPI(
+    title="SIH AI Companion API",
+    version="1.0.0",
+    docs_url="/docs",
+    openapi_url="/openapi.json"
+)
 
-# Allow CORS for localhost, preview URLs, and all production domains
+# Allow CORS for all origins (frontend on Vercel, local dev, etc.)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -30,21 +30,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Support both root prefixes and /api/* prefixes
 app.include_router(chat.router, prefix="/chat", tags=["chat"])
-app.include_router(chat.router, prefix="/api/chat", tags=["chat"])
-
 app.include_router(translation.router, prefix="/translate", tags=["translation"])
-app.include_router(translation.router, prefix="/api/translate", tags=["translation"])
-
 app.include_router(speech.router, prefix="/speech", tags=["speech"])
-app.include_router(speech.router, prefix="/api/speech", tags=["speech"])
 
 
 @app.get("/")
-@app.get("/api")
-@app.get("/api/")
-async def api_root():
+async def root():
     return {
         "message": "SIH AI Companion API is running",
         "status": "ok"
@@ -52,7 +44,6 @@ async def api_root():
 
 
 @app.get("/health")
-@app.get("/api/health")
 async def health():
     return {
         "status": "healthy"
