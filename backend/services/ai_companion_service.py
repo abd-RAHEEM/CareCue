@@ -1,7 +1,11 @@
 import os
 from dotenv import load_dotenv
 from typing import Dict, Any, Optional
-from backend.services.reme_service import ReMeService
+
+try:
+    from backend.services.reme_service import ReMeService
+except ImportError:
+    from services.reme_service import ReMeService
 
 load_dotenv()
 

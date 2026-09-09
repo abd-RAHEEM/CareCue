@@ -1,7 +1,13 @@
 from fastapi import APIRouter, HTTPException
-from backend.models.chat_models import ChatRequest, ChatResponse
-from backend.services.ai_companion_service import AICompanionService
-from backend.services.context_service import ContextService
+
+try:
+    from backend.models.chat_models import ChatRequest, ChatResponse
+    from backend.services.ai_companion_service import AICompanionService
+    from backend.services.context_service import ContextService
+except ImportError:
+    from models.chat_models import ChatRequest, ChatResponse
+    from services.ai_companion_service import AICompanionService
+    from services.context_service import ContextService
 
 router = APIRouter()
 

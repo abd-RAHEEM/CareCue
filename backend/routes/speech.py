@@ -1,12 +1,17 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File
 from fastapi.responses import FileResponse
-from backend.models.chat_models import TextToSpeechRequest, TextToSpeechResponse, SpeechToTextResponse
-from backend.services.sarvam_service import SarvamService, DEFAULT_AUDIO_DIR
+
+try:
+    from backend.models.chat_models import TextToSpeechRequest, TextToSpeechResponse, SpeechToTextResponse
+    from backend.services.sarvam_service import SarvamService, DEFAULT_AUDIO_DIR
+except ImportError:
+    from models.chat_models import TextToSpeechRequest, TextToSpeechResponse, SpeechToTextResponse
+    from services.sarvam_service import SarvamService, DEFAULT_AUDIO_DIR
+
 import os
 
 router = APIRouter()
 
-# Initialize SarvamService lazily or with fallback
 try:
     sarvam_service = SarvamService()
 except Exception as e:

@@ -1,11 +1,23 @@
+import sys
+import os
+
+# Ensure both repo root and backend directory are in sys.path
+backend_dir = os.path.dirname(os.path.abspath(__file__))
+root_dir = os.path.dirname(backend_dir)
+for p in [root_dir, backend_dir]:
+    if p not in sys.path:
+        sys.path.insert(0, p)
+
 from dotenv import load_dotenv
 load_dotenv()
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import os
 
-from backend.routes import chat, translation, speech
+try:
+    from backend.routes import chat, translation, speech
+except ImportError:
+    from routes import chat, translation, speech
 
 app = FastAPI(title="SIH AI Companion API", version="1.0.0", docs_url="/docs", openapi_url="/openapi.json")
 

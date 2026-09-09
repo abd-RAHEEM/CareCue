@@ -1,6 +1,11 @@
 from fastapi import APIRouter, HTTPException
-from backend.models.chat_models import TranslationRequest, TranslationResponse
-from backend.services.sarvam_service import SarvamService
+
+try:
+    from backend.models.chat_models import TranslationRequest, TranslationResponse
+    from backend.services.sarvam_service import SarvamService
+except ImportError:
+    from models.chat_models import TranslationRequest, TranslationResponse
+    from services.sarvam_service import SarvamService
 
 router = APIRouter()
 
