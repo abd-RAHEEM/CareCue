@@ -1,62 +1,34 @@
 {
-  "version": 2,
-  "builds": [
+  "buildCommand": "npm --prefix Frontend install && npm --prefix Frontend run build",
+  "outputDirectory": "Frontend/dist",
+  "rewrites": [
     {
-      "src": "Frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
+      "source": "/chat/(.*)",
+      "destination": "/api/index.py"
     },
     {
-      "src": "api/index.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/chat/(.*)",
-      "dest": "/api/index.py"
+      "source": "/speech/(.*)",
+      "destination": "/api/index.py"
     },
     {
-      "src": "/speech/(.*)",
-      "dest": "/api/index.py"
+      "source": "/translate/(.*)",
+      "destination": "/api/index.py"
     },
     {
-      "src": "/translate/(.*)",
-      "dest": "/api/index.py"
+      "source": "/health",
+      "destination": "/api/index.py"
     },
     {
-      "src": "/health",
-      "dest": "/api/index.py"
+      "source": "/docs",
+      "destination": "/api/index.py"
     },
     {
-      "src": "/docs",
-      "dest": "/api/index.py"
+      "source": "/openapi.json",
+      "destination": "/api/index.py"
     },
     {
-      "src": "/openapi.json",
-      "dest": "/api/index.py"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "/Frontend/dist/assets/$1"
-    },
-    {
-      "src": "/favicon.svg",
-      "dest": "/Frontend/dist/favicon.svg"
-    },
-    {
-      "src": "/icons.svg",
-      "dest": "/Frontend/dist/icons.svg"
-    },
-    {
-      "src": "/(.*\\.(?:js|css|ico|png|jpg|jpeg|svg|json|woff2?|ttf|webp))",
-      "dest": "/Frontend/dist/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/Frontend/dist/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
