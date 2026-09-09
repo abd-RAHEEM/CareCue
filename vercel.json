@@ -1,50 +1,9 @@
 {
   "buildCommand": "npm --prefix Frontend install && npm --prefix Frontend run build",
-  "outputDirectory": "Frontend/dist",
   "rewrites": [
     {
-      "source": "/api/chat/(.*)",
+      "source": "/(.*)",
       "destination": "/api/index.py"
-    },
-    {
-      "source": "/api/speech/(.*)",
-      "destination": "/api/index.py"
-    },
-    {
-      "source": "/api/translate/(.*)",
-      "destination": "/api/index.py"
-    },
-    {
-      "source": "/chat/(.*)",
-      "destination": "/api/index.py"
-    },
-    {
-      "source": "/speech/(.*)",
-      "destination": "/api/index.py"
-    },
-    {
-      "source": "/translate/(.*)",
-      "destination": "/api/index.py"
-    },
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/index.py"
-    },
-    {
-      "source": "/health",
-      "destination": "/api/index.py"
-    },
-    {
-      "source": "/docs",
-      "destination": "/api/index.py"
-    },
-    {
-      "source": "/openapi.json",
-      "destination": "/api/index.py"
-    },
-    {
-      "source": "/((?!api/|chat/|speech/|translate/|health|docs|openapi.json).*)",
-      "destination": "/index.html"
     }
   ]
 }
