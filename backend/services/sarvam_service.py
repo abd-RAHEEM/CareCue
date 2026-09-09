@@ -2,9 +2,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import os
+import tempfile
 from sarvamai import SarvamAI
 from sarvamai.play import save
 from typing import Optional
+
+DEFAULT_AUDIO_DIR = os.getenv("AUDIO_DIR", os.path.join(tempfile.gettempdir(), "carecue_audio"))
 
 
 class SarvamService:
@@ -38,7 +41,7 @@ class SarvamService:
         language: str,
         speaker: str,
         model: str = "bulbul:v3",
-        output_dir: str = "backend/generated_audio"
+        output_dir: Optional[str] = None
     ) -> str:
         try:
             response = self.client.text_to_speech.convert(
@@ -48,11 +51,12 @@ class SarvamService:
                 speaker=speaker
             )
             
-            os.makedirs(output_dir, exist_ok=True)
+            target_dir = output_dir or DEFAULT_AUDIO_DIR
+            os.makedirs(target_dir, exist_ok=True)
             
             import uuid
             filename = f"{uuid.uuid4()}.wav"
-            output_path = os.path.join(output_dir, filename)
+            output_path = os.path.join(target_dir, filename)
             
             save(response, output_path)
             

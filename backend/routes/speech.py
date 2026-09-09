@@ -1,13 +1,19 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File
 from fastapi.responses import FileResponse
 from backend.models.chat_models import TextToSpeechRequest, TextToSpeechResponse, SpeechToTextResponse
-from backend.services.sarvam_service import SarvamService
+from backend.services.sarvam_service import SarvamService, DEFAULT_AUDIO_DIR
 import os
 
 router = APIRouter()
 
-sarvam_service = SarvamService()
-AUDIO_DIR = "backend/generated_audio"
+# Initialize SarvamService lazily or with fallback
+try:
+    sarvam_service = SarvamService()
+except Exception as e:
+    sarvam_service = None
+
+AUDIO_DIR = DEFAULT_AUDIO_DIR
+os.makedirs(AUDIO_DIR, exist_ok=True)
 
 
 @router.post("/text-to-speech", response_model=TextToSpeechResponse)
@@ -21,11 +27,19 @@ async def text_to_speech(request: TextToSpeechRequest):
     if not request.speaker:
         raise HTTPException(status_code=400, detail="speaker is required")
 
+    global sarvam_service
+    if sarvam_service is None:
+        try:
+            sarvam_service = SarvamService()
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Sarvam service unavailable: {str(e)}")
+
     try:
         audio_file = sarvam_service.text_to_speech(
             text=request.text,
             language=request.language,
-            speaker=request.speaker
+            speaker=request.speaker,
+            output_dir=AUDIO_DIR
         )
 
         return TextToSpeechResponse(
@@ -43,6 +57,13 @@ async def speech_to_text(audio_file: UploadFile = File(...)):
 
     if not audio_file.filename:
         raise HTTPException(status_code=400, detail="audio_file must have a filename")
+
+    global sarvam_service
+    if sarvam_service is None:
+        try:
+            sarvam_service = SarvamService()
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Sarvam service unavailable: {str(e)}")
 
     try:
         transcript = sarvam_service.speech_to_text(audio_file.file)

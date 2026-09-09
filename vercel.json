@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "Frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    },
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/chat/(.*)",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/speech/(.*)",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/translate/(.*)",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/health",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/docs",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/openapi.json",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/Frontend/dist/assets/$1"
+    },
+    {
+      "src": "/favicon.svg",
+      "dest": "/Frontend/dist/favicon.svg"
+    },
+    {
+      "src": "/icons.svg",
+      "dest": "/Frontend/dist/icons.svg"
+    },
+    {
+      "src": "/(.*\\.(?:js|css|ico|png|jpg|jpeg|svg|json|woff2?|ttf|webp))",
+      "dest": "/Frontend/dist/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/Frontend/dist/index.html"
+    }
+  ]
+}

@@ -9,10 +9,10 @@ from backend.routes import chat, translation, speech
 
 app = FastAPI(title="SIH AI Companion API", version="1.0.0")
 
-# Add CORS middleware
+# Allow CORS for localhost, preview URLs, and any production domains
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:5174", "http://127.0.0.1:5174"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
