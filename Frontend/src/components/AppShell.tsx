@@ -15,11 +15,13 @@ const PATIENT_NAV = [
   { label: 'Activities', icon: Gamepad2, path: '/patient/activities' },
   { label: 'Memory & Family', icon: ImageIcon, path: '/patient/memory' },
   { label: 'Ask CareCue', icon: MessageCircle, path: '/patient/chat' },
+  { label: 'QR Sync', icon: RefreshCw, path: '/patient/sync' },
 ];
 
 // ── Caregiver Nav ──────────────────────────────────────────────────────────
 const CAREGIVER_NAV = [
   { label: 'Dashboard', icon: LayoutDashboard, path: '/caregiver' },
+  { label: 'Connect Patient', icon: RefreshCw, path: '/caregiver/sync' },
   { label: 'Memory Builder', icon: Brain, path: '/caregiver/memory' },
   { label: 'Reminders', icon: Calendar, path: '/caregiver/reminders' },
   { label: 'Cognitive Profile', icon: Brain, path: '/caregiver/profile' },
@@ -29,6 +31,7 @@ const CAREGIVER_NAV = [
 // ── Health Worker Nav ────────────────────────────────────────────────────────
 const HW_NAV = [
   { label: 'Patient List', icon: List, path: '/healthworker' },
+  { label: 'QR Sync', icon: RefreshCw, path: '/healthworker/sync' },
   { label: 'Notes', icon: FileText, path: '/healthworker/notes' },
   { label: 'Report', icon: Download, path: '/healthworker/report' },
 ];

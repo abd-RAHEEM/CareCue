@@ -13,6 +13,10 @@ dist
 dist-ssr
 *.local
 
+# FastAPI local environment
+Backend/.venv/
+Backend/cognicare.db
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

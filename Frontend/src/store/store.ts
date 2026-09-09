@@ -232,6 +232,14 @@ const SEED_ALERTS: Alert[] = [
   },
 ];
 
+export interface SyncState {
+  status: 'unpaired' | 'paired' | 'synced';
+  pairingId: string | null;
+  connectedCaregiverId: string | null;
+  lastSyncedAt: string | null;
+  version: number;
+}
+
 const SEED_NOTES: Record<string, { id: string; text: string; timestamp: string }[]> = {
   'patient-1': [
     { id: 'note1', text: 'Patient was in good spirits during visit. Responded well to family photos.', timestamp: new Date(Date.now() - 86400000 * 2).toISOString() },
@@ -337,6 +345,7 @@ interface CareCueStore {
   gameDifficulty: GameDifficultyState;
   hwNotes: Record<string, { id: string; text: string; timestamp: string }[]>;
   chatUsageToday: Record<string, number>; // patientId → count
+  syncState: Record<string, SyncState>;
 
   // Session
   session: SessionState;
@@ -372,6 +381,8 @@ interface CareCueStore {
 
   // Actions — Sync Simulation
   simulateSync: (patientId: string) => { syncedAt: string; itemsSynced: number };
+  pairPatient: (patientId: string, pairingId: string, caregiverId?: string) => void;
+  applyBackendActivity: (patientId: string, activityLog: ActivityResult[], syncedAt: string) => void;
 
   // Actions — Social Interaction
   incrementSocialInteraction: (patientId: string) => void;
@@ -397,6 +408,7 @@ export const useStore = create<CareCueStore>()(
     gameDifficulty: makeInitialDifficulty(),
     hwNotes: SEED_NOTES,
     chatUsageToday: {},
+    syncState: {},
     session: { role: null, patientId: null, caregiverId: null, healthWorkerId: null },
 
     // Session
@@ -645,6 +657,44 @@ export const useStore = create<CareCueStore>()(
         },
       }));
       return { syncedAt, itemsSynced };
+    },
+
+    pairPatient: (patientId, pairingId, caregiverId) => {
+      set(state => ({
+        syncState: {
+          ...state.syncState,
+          [patientId]: {
+            status: 'paired',
+            pairingId,
+            connectedCaregiverId: caregiverId ?? null,
+            lastSyncedAt: state.syncState[patientId]?.lastSyncedAt ?? null,
+            version: 1,
+          },
+        },
+      }));
+    },
+
+    applyBackendActivity: (patientId, activityLog, syncedAt) => {
+      set(state => {
+        const patient = state.patients[patientId];
+        if (!patient) return state;
+        return {
+          patients: {
+            ...state.patients,
+            [patientId]: { ...patient, activityLog, lastSyncedAt: syncedAt, pendingSyncCount: 0 },
+          },
+          syncState: {
+            ...state.syncState,
+            [patientId]: {
+              status: 'synced',
+              pairingId: state.syncState[patientId]?.pairingId ?? null,
+              connectedCaregiverId: state.syncState[patientId]?.connectedCaregiverId ?? 'caregiver-1',
+              lastSyncedAt: syncedAt,
+              version: 1,
+            },
+          },
+        };
+      });
     },
 
     // Social
