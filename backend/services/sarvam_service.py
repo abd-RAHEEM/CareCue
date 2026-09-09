@@ -3,8 +3,6 @@ load_dotenv()
 
 import os
 import tempfile
-from sarvamai import SarvamAI
-from sarvamai.play import save
 from typing import Optional
 
 DEFAULT_AUDIO_DIR = os.getenv("AUDIO_DIR", os.path.join(tempfile.gettempdir(), "carecue_audio"))
@@ -12,10 +10,23 @@ DEFAULT_AUDIO_DIR = os.getenv("AUDIO_DIR", os.path.join(tempfile.gettempdir(), "
 
 class SarvamService:
     def __init__(self):
-        api_key = os.getenv("SARVAM_API_KEY")
-        if not api_key:
-            raise ValueError("SARVAM_API_KEY not found in environment variables")
-        self.client = SarvamAI(api_subscription_key=api_key)
+        self.api_key = os.getenv("SARVAM_API_KEY")
+        self.client = None
+        if self.api_key:
+            try:
+                from sarvamai import SarvamAI
+                self.client = SarvamAI(api_subscription_key=self.api_key)
+            except Exception as e:
+                print(f"Warning: Failed to initialize SarvamAI client: {e}")
+                self.client = None
+
+    def _ensure_client(self):
+        if not self.client:
+            self.api_key = os.getenv("SARVAM_API_KEY")
+            if not self.api_key:
+                raise ValueError("SARVAM_API_KEY is not set. Please configure SARVAM_API_KEY in environment variables.")
+            from sarvamai import SarvamAI
+            self.client = SarvamAI(api_subscription_key=self.api_key)
 
     def translate_text(
         self,
@@ -24,6 +35,7 @@ class SarvamService:
         target_language: str,
         model: str = "sarvam-translate:v1"
     ) -> str:
+        self._ensure_client()
         try:
             response = self.client.text.translate(
                 input=text,
@@ -43,7 +55,9 @@ class SarvamService:
         model: str = "bulbul:v3",
         output_dir: Optional[str] = None
     ) -> str:
+        self._ensure_client()
         try:
+            from sarvamai.play import save
             response = self.client.text_to_speech.convert(
                 text=text,
                 language_code=language,
@@ -69,6 +83,7 @@ class SarvamService:
         audio_file,
         model: str = "saaras:v3"
     ) -> str:
+        self._ensure_client()
         try:
             response = self.client.speech_to_text.transcribe(
                 file=audio_file,
