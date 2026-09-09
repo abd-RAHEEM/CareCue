@@ -160,10 +160,84 @@ export async function getAssistantReply(patientId: string, message: string): Pro
     });
     return reply;
   }
-  const res = await fetch(`${API_BASE_URL}/patients/${patientId}/assistant`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message }),
-  });
-  return res.json();
+
+  // Real backend integration
+  try {
+    const state = useStore.getState();
+    const patient = state.patients[patientId];
+    
+    if (!patient) {
+      throw new Error('Patient not found');
+    }
+
+    // Map frontend request to FastAPI format
+    const language = patient.preferredLanguage === 'Assamese' ? 'as-IN' : 
+                     patient.preferredLanguage === 'English' ? 'en-IN' : 'en-IN';
+    
+    const requestBody = {
+      patient_id: patientId,
+      role: 'patient',
+      message: message,
+      language: language
+    };
+
+    const res = await fetch(`${API_BASE_URL}/chat/companion`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!res.ok) {
+      let errorDetail = 'Unknown error';
+      try {
+        const errorData = await res.json();
+        errorDetail = errorData.detail || 'Unknown error';
+      } catch (e) {
+        errorDetail = res.statusText;
+      }
+      throw new Error(`Backend request failed: ${res.status} - ${errorDetail}`);
+    }
+
+    const data = await res.json();
+    
+    // Map FastAPI response to frontend format
+    const reply: AssistantReply = {
+      reply: data.response,
+      escalateToCaregiver: false, // Backend doesn't currently support escalation, default to false
+    };
+
+    // Log engagement for consistency with mock mode
+    useStore.getState().addChatMessage({
+      patientId,
+      sender: 'patient',
+      text: message,
+      timestamp: new Date().toISOString(),
+    });
+    useStore.getState().addChatMessage({
+      patientId,
+      sender: 'assistant',
+      text: reply.reply,
+      timestamp: new Date().toISOString(),
+      escalateToCaregiver: reply.escalateToCaregiver,
+    });
+
+    return reply;
+  } catch (error) {
+    console.error('Backend assistant error:', error);
+    
+    // Check if it's a quota error (429)
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    if (errorMessage.includes('429') || errorMessage.includes('quota')) {
+      return {
+        reply: "I'm experiencing high demand right now. Please try again in a few minutes, or ask your caregiver for help.",
+        escalateToCaregiver: false,
+      };
+    }
+    
+    // Return a fallback error response for other errors
+    return {
+      reply: "I'm having trouble connecting right now. Please try again or ask your caregiver for help.",
+      escalateToCaregiver: true,
+    };
+  }
 }

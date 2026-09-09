@@ -1,13 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Mic, Send, Volume2, MicOff, AlertCircle, MessageCircle } from 'lucide-react';
+import { Mic, Send, Volume2, MicOff, AlertCircle, MessageCircle, Loader2 } from 'lucide-react';
 import { getAssistantReply } from '../../api/assistantApi';
+import { speechToText, textToSpeech, getAudioUrl } from '../../api/speechApi';
 import { useStore } from '../../store/store';
 
-function speak(text: string) {
+// Fallback browser TTS for unsupported languages / offline
+function speakBrowser(text: string, lang: string = 'en-IN') {
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.rate = 0.85; u.pitch = 1.1; u.lang = 'en-IN';
+    u.rate = 0.85;
+    u.pitch = 1.1;
+    u.lang = lang;
     window.speechSynthesis.speak(u);
   }
 }
@@ -30,56 +34,108 @@ export const PatientChat: React.FC = () => {
   const patientMessages = chatMessages.filter(m => m.patientId === session.patientId);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [micActive, setMicActive] = useState(false);
-  const [micSupported] = useState(() => 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window);
+  const [recording, setRecording] = useState(false);
+  const [processingSpeech, setProcessingSpeech] = useState(false);
+  const [generatingSpeech, setGeneratingSpeech] = useState(false);
+  const [micSupported] = useState(() => typeof window !== 'undefined' && 'MediaRecorder' in window && 'navigator' in window && 'mediaDevices' in window.navigator);
   const [escalationNotice, setEscalationNotice] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const recogRef = useRef<any>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [patientMessages]);
 
-  const sendMessage = async (text: string) => {
+  const sendMessage = async (text: string, useTTS: boolean = true) => {
     if (!text.trim() || !patient || loading) return;
     setInput('');
     setLoading(true);
+    setGeneratingSpeech(useTTS);
+    
     try {
       const reply = await getAssistantReply(patient.id, text);
       if (reply.escalateToCaregiver) {
         setEscalationNotice(true);
         setTimeout(() => setEscalationNotice(false), 5000);
       }
-      speak(reply.reply);
+      
+      // Try Sarvam TTS first, fall back to browser TTS
+      if (useTTS) {
+        const language = patient.preferredLanguage === 'Assamese' ? 'as-IN' : 
+                         patient.preferredLanguage === 'English' ? 'en-IN' : 'en-IN';
+        
+        try {
+          const ttsResult = await textToSpeech(reply.reply, language);
+          const audioUrl = getAudioUrl(ttsResult.audio_file);
+          const audio = new Audio(audioUrl);
+          audio.play();
+        } catch (ttsError) {
+          console.log('Sarvam TTS failed, using browser fallback:', ttsError);
+          // Fall back to browser TTS
+          const browserLang = patient.preferredLanguage === 'Assamese' ? 'hi-IN' : 'en-IN';
+          speakBrowser(reply.reply, browserLang);
+        }
+      } else {
+        speakBrowser(reply.reply);
+      }
     } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
+      setGeneratingSpeech(false);
     }
   };
 
-  const startMic = () => {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SpeechRecognition) return;
-    recogRef.current = new SpeechRecognition();
-    recogRef.current.continuous = false;
-    recogRef.current.interimResults = false;
-    recogRef.current.lang = 'en-IN';
-    recogRef.current.onresult = (e: any) => {
-      const transcript = e.results[0][0].transcript;
-      setInput(transcript);
-      sendMessage(transcript);
-      setMicActive(false);
-    };
-    recogRef.current.onerror = () => setMicActive(false);
-    recogRef.current.onend = () => setMicActive(false);
-    recogRef.current.start();
-    setMicActive(true);
+  const startRecording = async () => {
+    if (!micSupported || !patient) return;
+    
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunksRef.current = [];
+      
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+      
+      mediaRecorderRef.current.onstop = async () => {
+        setRecording(false);
+        setProcessingSpeech(true);
+        
+        try {
+          const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+          const result = await speechToText(audioBlob);
+          
+          if (result.transcript && result.transcript.trim()) {
+            setInput(result.transcript);
+            await sendMessage(result.transcript);
+          }
+        } catch (error) {
+          console.error('Speech recognition failed:', error);
+          setInput('Could not understand. Please try again or type your message.');
+        } finally {
+          setProcessingSpeech(false);
+          // Stop all tracks to release microphone
+          stream.getTracks().forEach(track => track.stop());
+        }
+      };
+      
+      mediaRecorderRef.current.start();
+      setRecording(true);
+    } catch (error) {
+      console.error('Microphone access failed:', error);
+      alert('Could not access microphone. Please check permissions or type your message.');
+    }
   };
 
-  const stopMic = () => {
-    recogRef.current?.stop();
-    setMicActive(false);
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && recording) {
+      mediaRecorderRef.current.stop();
+    }
   };
 
   const formatTime = (iso: string) => new Date(iso).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
@@ -140,7 +196,7 @@ export const PatientChat: React.FC = () => {
               <div className="flex items-center gap-2">
                 <span className="text-xs text-gray-400">{formatTime(msg.timestamp)}</span>
                 {msg.sender === 'assistant' && (
-                  <button onClick={() => speak(msg.text)}
+                  <button onClick={() => speakBrowser(msg.text)}
                     className="p-1 rounded-full hover:bg-gray-100 text-gray-400 cursor-pointer" aria-label="Read aloud">
                     <Volume2 size={14} />
                   </button>
@@ -156,10 +212,19 @@ export const PatientChat: React.FC = () => {
               <MessageCircle size={18} className="text-indigo-600" />
             </div>
             <div className="bg-white border border-gray-100 px-5 py-4 rounded-3xl rounded-bl-md shadow-sm">
-              <div className="flex gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-indigo-400 animate-bounce" />
-                <div className="w-2 h-2 rounded-full bg-indigo-400 animate-bounce delay-100" />
-                <div className="w-2 h-2 rounded-full bg-indigo-400 animate-bounce delay-200" />
+              <div className="flex items-center gap-2">
+                {generatingSpeech ? (
+                  <>
+                    <Loader2 size={16} className="text-indigo-400 animate-spin" />
+                    <span className="text-sm text-gray-600">Speaking...</span>
+                  </>
+                ) : (
+                  <>
+                    <div className="w-2 h-2 rounded-full bg-indigo-400 animate-bounce" />
+                    <div className="w-2 h-2 rounded-full bg-indigo-400 animate-bounce delay-100" />
+                    <div className="w-2 h-2 rounded-full bg-indigo-400 animate-bounce delay-200" />
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -182,16 +247,41 @@ export const PatientChat: React.FC = () => {
           </div>
         )}
 
+        {/* Voice status message */}
+        {(recording || processingSpeech) && (
+          <div className="flex items-center gap-2 px-4 py-2 bg-indigo-50 rounded-2xl mb-2">
+            {recording && (
+              <>
+                <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
+                <span className="text-sm text-indigo-700 font-medium">Recording... Release to send</span>
+              </>
+            )}
+            {processingSpeech && (
+              <>
+                <Loader2 size={16} className="text-indigo-600 animate-spin" />
+                <span className="text-sm text-indigo-700 font-medium">Converting speech to text...</span>
+              </>
+            )}
+          </div>
+        )}
+
         <div className="flex gap-3 items-end">
           {/* Mic button */}
           <button
-            onMouseDown={startMic} onMouseUp={stopMic} onTouchStart={startMic} onTouchEnd={stopMic}
+            onMouseDown={startRecording} onMouseUp={stopRecording} 
+            onTouchStart={startRecording} onTouchEnd={stopRecording}
             onClick={!micSupported ? () => alert('Voice not supported on this device. Please type your question.') : undefined}
-            className={`w-16 h-16 rounded-2xl flex items-center justify-center cursor-pointer transition-all active:scale-95 shrink-0 ${micActive ? 'bg-red-500 text-white animate-pulse-soft' : micSupported ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200' : 'bg-gray-100 text-gray-400'}`}
-            aria-label={micActive ? 'Stop listening' : micSupported ? 'Hold to speak' : 'Voice not supported'}
-            title={micSupported ? 'Hold to speak' : 'Voice not supported on this device'}
+            disabled={loading || processingSpeech}
+            className={`w-16 h-16 rounded-2xl flex items-center justify-center cursor-pointer transition-all active:scale-95 shrink-0 ${
+              recording ? 'bg-red-500 text-white animate-pulse-soft' : 
+              processingSpeech ? 'bg-amber-500 text-white' :
+              loading ? 'bg-gray-200 text-gray-400 cursor-not-allowed' :
+              micSupported ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200' : 'bg-gray-100 text-gray-400'
+            }`}
+            aria-label={recording ? 'Recording... Release to send' : processingSpeech ? 'Processing...' : loading ? 'Please wait...' : micSupported ? 'Hold to speak' : 'Voice not supported'}
+            title={recording ? 'Recording... Release to send' : processingSpeech ? 'Processing speech...' : loading ? 'Please wait...' : micSupported ? 'Hold to speak' : 'Voice not supported on this device'}
           >
-            {micActive ? <MicOff size={24} /> : <Mic size={24} />}
+            {recording ? <MicOff size={24} /> : processingSpeech ? <Loader2 size={24} className="animate-spin" /> : <Mic size={24} />}
           </button>
 
           <div className="flex-1 flex gap-2">

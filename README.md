@@ -1,413 +1,155 @@
-# CareCue
+# CareCue (SIH AI Companion)
 
-CareCue is an offline-first, voice-first cognitive care platform frontend designed for older adults, caregivers, and health workers. This repository contains the **frontend application** built with React, TypeScript, Vite, Zustand, Tailwind CSS, and Framer Motion.
+CareCue is an offline-first, voice-first cognitive care platform and AI companion designed for older adults, individuals living with dementia/mild cognitive impairment, caregivers, and community health workers in India (with special focus on regional languages such as Assamese and Hindi).
 
-The current implementation is designed as a realistic frontend prototype with seeded local data and clearly defined API swap points for connecting a production backend later.
+This repository contains both the **Frontend Web Application** (React 19 + TypeScript + Vite + Zustand + Tailwind CSS) and the **Backend API Service** (FastAPI + Sarvam AI + Speech STT/TTS + Multi-role LLM companion).
 
-> **Important:** CareCue is a software prototype and should not be treated as a medical diagnostic or treatment system. The cognitive scores, reminders, alerts, and assistant behavior in the current frontend use seeded/mock data unless a real backend is configured.
+---
 
-## Highlights
+## 🌟 Highlights & Features
 
-- Three role-based experiences: **Patient, Caregiver, Health Worker**
-- Patient-focused dashboard, reminders, activities, family memory, and assistant
-- **15 cognitive games** covering memory, attention, recognition, sequencing, auditory comprehension, and related skills
-- Cognitive profile visualization and activity history
-- Adaptive game difficulty state with a backend/ML swap point
-- Memory graph for people, places, objects, songs, hobbies, and photo memories
-- Routine and reminder workflows
-- Caregiver alerts and health-worker reporting views
-- English and Assamese content packs
-- Mock/offline data mode for frontend development
-- API abstraction ready for a future HTTP backend
-- Responsive UI with animation libraries and reusable components
+### Frontend Experience
+- **Three Dedicated Role Views**:
+  - **Patient**: Home dashboard, daily routines, reminders, conversational companion, memory & family gallery, and 15 interactive cognitive games.
+  - **Caregiver**: Real-time supervision dashboard, interactive memory graph builder, routine/medication scheduler, cognitive progression profiles, and family/community support.
+  - **Health Worker**: Community patient cohort list, clinical summary profiles, observation notes, and exportable reports.
+- **15 Cognitive Games**: Memory Basket, My Memory Box, Recipe Recall, Sound Detective, Simon Says, Weaving Tracker, Pattern Builder, Daily Life Sequencer, Festival Memory, Object Detective, Familiar Pattern Match, Landmark Puzzle, Story Circle, Music Rhythm, and Family Music.
+- **Cultural & Regional Localization**: Built-in content packs for English and Assamese (`src/content-packs/`).
+- **Flexible Modes**: Toggle between instant standalone offline mock mode (Zustand-backed) and real FastAPI backend integration via simple `.env.local` config.
 
-## Tech Stack
+### Backend & AI Capabilities
+- **Multi-Role Conversational AI Companion**: Role-tailored prompts for Patients, Caregivers, and Health Workers with patient context awareness.
+- **Voice & Speech AI (Sarvam AI Integration)**:
+  - Text-to-Speech (TTS) with regional voice output (`/speech/text-to-speech`) + browser speech synthesis fallback.
+  - Speech-to-Text (STT) voice input (`/speech/speech-to-text`) via web audio recording.
+  - Regional language translation (`/translate`) for Indic languages (Assamese `as-IN`, Hindi `hi-IN`, English `en-IN`).
+- **Context Management**: Patient memory graph, recent activity tracking, and adaptive response generation.
 
-| Area | Technology |
-| --- | --- |
-| UI | React 19 + TypeScript |
-| Build tool | Vite |
-| Routing | React Router |
-| State | Zustand |
-| Styling | Tailwind CSS 4 |
-| Animation | Framer Motion, GSAP, Anime.js, AOS |
-| Icons | Lucide React |
-| Charts | Recharts |
-| Linting | Oxlint |
+---
 
-## Application Architecture
+## 🏗️ Project Architecture & Structure
 
 ```text
-Browser
-  |
-  v
-src/main.tsx
-  |
-  v
-src/App.tsx
-  |
-  +-------------------- Role Selector --------------------+
-  |                                                       |
-  +--> Patient routes                                     |
-  |      |                                                |
-  |      +--> Home / Reminders / Activities / Memory     |
-  |      +--> Assistant                                   |
-  |      +--> 15 Cognitive Games                          |
-  |                                                       |
-  +--> Caregiver routes                                   |
-  |      +--> Dashboard / Memory / Reminders             |
-  |      +--> Cognitive Profile / Family Community        |
-  |                                                       |
-  +--> Health Worker routes                               |
-         +--> Patient List / Patient Summary              |
-         +--> Notes / Export Report                       |
-
-Shared application state
-  |
-  v
-src/store/store.ts
-  |
-  +--> Patients / caregivers / health workers
-  +--> Reminders / alerts / activity results
-  +--> Cognitive profiles / difficulty state
-  +--> Memory graph / routine / chat state
-
-Service boundary
-  |
-  v
-src/api/*.ts
-  |
-  +--> Mock Zustand-backed implementation
-  |
-  +--> Real HTTP backend implementation
-```
-
-## Project Structure
-
-```text
-.
-├── public/
-├── src/
-│   ├── api/
-│   │   ├── activityApi.ts
-│   │   ├── alertApi.ts
-│   │   ├── assistantApi.ts
-│   │   ├── cognitiveProfileApi.ts
-│   │   ├── config.ts
-│   │   ├── memoryGraphApi.ts
-│   │   ├── patientApi.ts
-│   │   ├── reminderApi.ts
-│   │   └── syncApi.ts
-│   │
-│   ├── assets/
-│   ├── components/
-│   │   ├── AlertChip.tsx
-│   │   ├── AppShell.tsx
-│   │   ├── Button.tsx
-│   │   ├── CognitiveDomainChart.tsx
-│   │   ├── ReminderCard.tsx
-│   │   ├── RoleSelector.tsx
-│   │   └── SyncIndicator.tsx
-│   │
-│   ├── content-packs/
-│   │   ├── assamese.json
-│   │   └── english.json
-│   │
-│   ├── games/
-│   │   ├── GameShell.tsx
-│   │   ├── MemoryBasket.tsx
-│   │   ├── MyMemoryBox.tsx
-│   │   ├── RecipeRecall.tsx
-│   │   ├── SoundDetective.tsx
-│   │   ├── SimonSays.tsx
-│   │   ├── WeavingTracker.tsx
-│   │   ├── PatternBuilder.tsx
-│   │   ├── DailyLifeSequencer.tsx
-│   │   ├── FestivalMemory.tsx
-│   │   ├── ObjectDetective.tsx
-│   │   ├── FamiliarPatternMatch.tsx
-│   │   ├── LandmarkPuzzle.tsx
-│   │   ├── StoryCircle.tsx
-│   │   ├── MusicRhythm.tsx
-│   │   └── FamilyMusic.tsx
-│   │
-│   ├── roles/
-│   │   ├── patient/
-│   │   ├── caregiver/
-│   │   └── healthworker/
-│   │
-│   ├── store/
-│   │   └── store.ts
-│   ├── App.tsx
-│   ├── App.css
-│   ├── index.css
-│   ├── main.tsx
-│   └── types.ts
+CareCue/
+├── Frontend/                          # React + TypeScript + Vite Frontend
+│   ├── public/                        # Static assets & icons
+│   ├── src/
+│   │   ├── api/                       # API integration layer (speech, assistant, activities, etc.)
+│   │   ├── components/                # Reusable UI components
+│   │   ├── content-packs/             # Regional cultural data packs (English, Assamese)
+│   │   ├── games/                     # 15 Cognitive game modules
+│   │   ├── roles/                     # Role-based pages (patient, caregiver, healthworker)
+│   │   ├── store/                     # Zustand central state management
+│   │   ├── App.tsx                    # Main router & app shell
+│   │   ├── main.tsx
+│   │   └── types.ts                   # Unified TypeScript data contracts
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── vite.config.ts
 │
-├── package.json
-├── tsconfig*.json
-├── vite.config.ts
+├── backend/                           # FastAPI Python Backend
+│   ├── models/                        # Pydantic data schemas & request models
+│   ├── prompts/                       # Role-specific system prompts (patient, caregiver, health_worker)
+│   ├── routes/                        # API route handlers (chat, speech, translation)
+│   ├── services/                      # Sarvam AI, AI companion, context, and ReMe services
+│   ├── generated_audio/               # Temporary generated audio storage (gitignored)
+│   └── main.py                        # FastAPI application entry point
+│
+├── DESIGN.md                          # Comprehensive design system & architecture docs
+├── requirements.txt                   # Python backend dependencies
 └── README.md
 ```
 
-## User Roles
+---
 
-### Patient
+## 🚀 Getting Started
 
-The patient experience is optimized for simple, familiar interactions. It includes:
+### Prerequisites
+- **Node.js** (v18+) and **npm**
+- **Python** (v3.10+)
 
-- Personal home dashboard
-- Reminders and daily routine
-- Cognitive activity launcher
-- Memory and family information
-- Conversational assistant
-- 15 cognitive games
-- Sync status and alerts
+---
 
-Routes are under `/patient` and `/patient/games/*`.
-
-### Caregiver
-
-The caregiver experience focuses on supervising a linked patient:
-
-- Dashboard
-- Memory graph builder
-- Reminder management
-- Cognitive profile
-- Family/community area
-
-Routes are under `/caregiver`.
-
-### Health Worker
-
-The health-worker experience focuses on a broader patient list and reporting workflow:
-
-- Patient list
-- Patient summary
-- Notes
-- Report export
-
-Routes are under `/healthworker`.
-
-## Cognitive Games
-
-The frontend currently includes 15 dedicated game modules:
-
-1. Memory Basket
-2. My Memory Box
-3. Recipe Recall
-4. Sound Detective
-5. Simon Says
-6. Weaving Tracker
-7. Pattern Builder
-8. Daily Life Sequencer
-9. Festival Memory
-10. Object Detective
-11. Familiar Pattern Match
-12. Landmark Puzzle
-13. Story Circle
-14. Music Rhythm
-15. Family Music
-
-Game results use the shared `ActivityResult` model and can be recorded through `activityApi.ts`. Difficulty is represented per patient and per game on a 1-5 scale.
-
-## State Management
-
-The frontend uses a centralized Zustand store in `src/store/store.ts`.
-
-The store contains the current prototype dataset for:
-
-- Patients
-- Caregivers
-- Health workers
-- Session/role state
-- Reminders
-- Alerts
-- Activity results
-- Cognitive profiles
-- Game difficulty
-- Chat messages
-- Memory graphs
-- Routine state
-- Sync metadata
-
-The TypeScript contracts for these objects are defined in `src/types.ts` and are intended to serve as a shared frontend/backend data contract.
-
-## API Layer
-
-The frontend deliberately separates UI/state logic from backend integration through modules under `src/api/`.
-
-Current API modules include:
-
-- `patientApi.ts` for patient retrieval and role-linked patient lists
-- `reminderApi.ts` for reminder operations
-- `activityApi.ts` for recording activity results, retrieving history, and next-difficulty requests
-- `cognitiveProfileApi.ts` for cognitive profile retrieval
-- `memoryGraphApi.ts` for memory graph data
-- `alertApi.ts` for alerts and acknowledgement
-- `assistantApi.ts` for assistant interactions
-- `syncApi.ts` for patient synchronization
-
-This makes it possible to develop the frontend independently while the backend is being implemented.
-
-## Mock Mode and Backend Mode
-
-The current frontend defaults to mocked/local data.
-
-Configuration is controlled by:
-
-```text
-VITE_USE_MOCK_DATA=true
-VITE_API_BASE_URL=http://localhost:4000/api
-```
-
-With mock mode enabled, API functions read/write through the Zustand store and may simulate network latency.
-
-To connect to a real backend, create a `.env.local` file and set:
-
-```env
-VITE_USE_MOCK_DATA=false
-VITE_API_BASE_URL=http://localhost:4000/api
-```
-
-The backend should implement the endpoints expected by the files in `src/api/`.
-
-## Getting Started
-
-### Requirements
-
-- Node.js with npm
-- A modern browser
-
-### Install dependencies
+### 1. Setting Up & Running the Backend
 
 ```bash
+# 1. Create and activate a Python virtual environment
+python -m venv venv
+
+# Windows:
+venv\Scripts\activate
+# Linux/Mac:
+source venv/bin/activate
+
+# 2. Install backend dependencies
+pip install -r requirements.txt
+
+# 3. Configure backend environment variables
+# Create a .env file in the repository root:
+SARVAM_API_KEY=your_sarvam_api_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# 4. Start the FastAPI server
+uvicorn backend.main:app --reload --port 8000
+```
+
+The backend server will run at `http://127.0.0.1:8000`.
+- Interactive Swagger Documentation: `http://127.0.0.1:8000/docs`
+- ReDoc: `http://127.0.0.1:8000/redoc`
+
+---
+
+### 2. Setting Up & Running the Frontend
+
+```bash
+# Navigate to the Frontend directory
+cd Frontend
+
+# 1. Install dependencies
 npm install
-```
 
-### Start development server
+# 2. Configure frontend environment (Optional)
+# In Frontend/.env.local (or create from .env.example):
+# VITE_USE_MOCK_DATA=false
+# VITE_API_BASE_URL=http://127.0.0.1:8000
 
-```bash
+# 3. Start development server
 npm run dev
 ```
 
-Vite will start the development server and print the local URL in the terminal.
+The frontend will open at `http://localhost:5173`.
 
-### Build for production
+---
 
+## 📡 API Reference Summary
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | Service health status |
+| `POST` | `/chat/companion` | Conversational assistant response tailored to patient/caregiver/health worker |
+| `POST` | `/translate` | Indic language translation (Assamese, Hindi, English) |
+| `POST` | `/speech/text-to-speech` | Generates speech audio from text using Sarvam AI |
+| `POST` | `/speech/speech-to-text` | Transcribes spoken audio recording to text |
+
+---
+
+## 🧪 Testing
+
+The backend includes test scripts to verify integrations:
 ```bash
+python test_api_endpoints.py
+python test_voice_integration.py
+python test_all_roles.py
+```
+
+Frontend build check:
+```bash
+cd Frontend
 npm run build
 ```
 
-### Preview production build
+---
 
-```bash
-npm run preview
-```
-
-### Lint
-
-```bash
-npm run lint
-```
-
-## Environment Variables
-
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `VITE_USE_MOCK_DATA` | `true` | Selects local/mock data versus the HTTP backend |
-| `VITE_API_BASE_URL` | `http://localhost:4000/api` | Base URL used by the API modules when mock mode is disabled |
-
-Do not place secrets or private credentials in Vite client-side environment variables. Values prefixed with `VITE_` are exposed to the browser.
-
-## Frontend-to-Backend Handoff
-
-The backend can be developed independently against the TypeScript interfaces in `src/types.ts` and the request patterns already present in `src/api/`.
-
-A typical integration sequence is:
-
-```text
-Frontend UI
-    |
-    v
-src/api/*.ts
-    |
-    v
-HTTP API
-    |
-    +--> Patient data
-    +--> Reminders
-    +--> Cognitive activity records
-    +--> Cognitive profile
-    +--> Memory graph
-    +--> Alerts
-    +--> Assistant
-    +--> Sync
-```
-
-The current code already contains explicit swap points for real assistant/ML services. In particular, the assistant can move from the local rule-based implementation to an HTTP assistant service, and adaptive difficulty can move from the local calculation to an ML-backed endpoint.
-
-## Localization and Cultural Content
-
-Two content packs are included:
-
-- `src/content-packs/english.json`
-- `src/content-packs/assamese.json`
-
-The shared content-pack structure supports culturally relevant objects, foods, festivals, songs, textiles, landmarks, routines, and sounds. This is intended to allow the same interaction patterns to use familiar local content for different users.
-
-## Design Principles
-
-### Familiarity over complexity
-
-The patient-facing experience emphasizes recognizable concepts such as family, routine, reminders, music, food, places, and everyday activities.
-
-### Role separation
-
-Patient, caregiver, and health-worker workflows are separated at the route and UI layer while sharing common data contracts and state primitives.
-
-### Offline-first development
-
-The frontend can operate with seeded local data without requiring a live backend, which makes development, demonstrations, and frontend/backend parallel work possible.
-
-### Replaceable services
-
-Backend integrations are isolated in `src/api/`, so replacing mock implementations does not require rewriting the page and game components.
-
-### Accessible interaction goals
-
-The product is designed around clear actions, reusable controls, familiar content, and reduced cognitive load for the patient-facing experience.
-
-## Current Prototype Limitations
-
-This repository is a frontend implementation and is not yet a full production platform. In particular:
-
-- Authentication and authorization are not implemented as a production identity system.
-- Patient data is seeded/local in mock mode.
-- Real-time synchronization requires the backend implementation.
-- The assistant is mock/rule-based when mock mode is enabled.
-- Adaptive difficulty has a backend/ML swap point rather than a production ML service.
-- Production persistence, encryption, audit logging, monitoring, and compliance controls still need to be implemented on the complete system.
-- Clinical interpretation of cognitive scores is outside the scope of this frontend prototype.
-
-## Suggested Team Workflow
-
-For a team working on this repository, keep `main` stable and use feature branches:
-
-```text
-main
-├── feature/patient
-├── feature/caregiver
-├── feature/healthworker
-├── feature/games
-└── feature/api-integration
-```
-
-Each contributor should open a pull request for their branch. A designated integrator can review, resolve conflicts, run the build/lint checks, and merge approved work into `main`.
-
-## Related Documentation
-
-- [`DESIGN.md`](./DESIGN.md) for the detailed frontend architecture and implementation design.
-
-## License
-
+## 📄 License & Notes
+- Built for Smart India Hackathon (SIH) 2026.
+- Prototype disclaimer: Designed for assistive care support and cognitive stimulation.
