@@ -6,15 +6,19 @@ export async function recordActivityResult(
   patientId: string,
   result: Omit<ActivityResult, 'id'>
 ): Promise<ActivityResult> {
-  if (USE_MOCK) {
-    return useStore.getState().recordActivityResult(patientId, result);
+  const localResult = useStore.getState().recordActivityResult(patientId, result);
+  if (!USE_MOCK) {
+    try {
+      await fetch(`${API_BASE_URL}/patients/${patientId}/activity`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(localResult),
+      });
+    } catch {
+      // The Zustand activity remains available for a later QR/backend sync.
+    }
   }
-  const res = await fetch(`${API_BASE_URL}/patients/${patientId}/activity`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(result),
-  });
-  return res.json();
+  return localResult;
 }
 
 export async function getActivityHistory(patientId: string, gameId?: string): Promise<ActivityResult[]> {

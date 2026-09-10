@@ -47,10 +47,14 @@ wheels/
 !.env.example
 Frontend/.env.local
 Frontend/.env.*.local
-!.env.example
 !Frontend/.env.example
 
-# --- Generated audio & test media files ---
+# --- Local SQLite Databases & Audio caches ---
+*.db
+*.sqlite
+*.sqlite3
+backend/cognicare.db
+cognicare.db
 backend/generated_audio/
 *.wav
 *.mp3
@@ -63,6 +67,7 @@ test_output.wav
 .DS_Store
 Thumbs.db
 .idea/
+# Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json

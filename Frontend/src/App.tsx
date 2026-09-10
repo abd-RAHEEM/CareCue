@@ -9,6 +9,7 @@ import { PatientReminders } from './roles/patient/PatientReminders';
 import { PatientActivities } from './roles/patient/PatientActivities';
 import { PatientMemoryFamily } from './roles/patient/PatientMemoryFamily';
 import { PatientChat } from './roles/patient/PatientChat';
+import { PatientQRSync } from './roles/patient/PatientQRSync';
 
 // Caregiver role views
 import { CaregiverDashboard } from './roles/caregiver/CaregiverDashboard';
@@ -22,8 +23,9 @@ import { HWPatientList } from './roles/healthworker/HWPatientList';
 import { HWPatientSummary } from './roles/healthworker/HWPatientSummary';
 import { HWNotes } from './roles/healthworker/HWNotes';
 import { HWExportReport } from './roles/healthworker/HWExportReport';
+import { HWQRSync } from './roles/healthworker/HWQRSync';
 
-// All 15 Games
+// All 15 Games 
 import { MemoryBasket } from './games/MemoryBasket';
 import { MyMemoryBox } from './games/MyMemoryBox';
 import { RecipeRecall } from './games/RecipeRecall';
@@ -54,6 +56,7 @@ export function App() {
           <Route path="/patient/activities" element={<PatientActivities />} />
           <Route path="/patient/memory" element={<PatientMemoryFamily />} />
           <Route path="/patient/chat" element={<PatientChat />} />
+          <Route path="/patient/sync" element={<PatientQRSync />} />
 
           {/* 15 Cognitive Games */}
           <Route path="/patient/games/memory-basket" element={<MemoryBasket />} />
@@ -78,12 +81,14 @@ export function App() {
           <Route path="/caregiver/reminders" element={<CaregiverReminders />} />
           <Route path="/caregiver/profile" element={<CaregiverCognitiveProfile />} />
           <Route path="/caregiver/family" element={<CaregiverFamilyCommunity />} />
+          <Route path="/caregiver/sync" element={<HWQRSync />} />
 
           {/* Health Worker Role Views */}
           <Route path="/healthworker" element={<HWPatientList />} />
           <Route path="/healthworker/summary/:patientId?" element={<HWPatientSummary />} />
           <Route path="/healthworker/notes" element={<HWNotes />} />
           <Route path="/healthworker/report" element={<HWExportReport />} />
+          <Route path="/healthworker/sync" element={<HWQRSync />} />
         </Route>
 
         {/* Fallback */}
