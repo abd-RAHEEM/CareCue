@@ -1,4 +1,4 @@
-# CareCue (SIH AI Companion)
+# CareCue (Dimentia AI Companion)
 
 CareCue is an offline-first, voice-first cognitive care platform and AI companion designed for older adults, individuals living with dementia/mild cognitive impairment, caregivers, and community health workers in India (with special focus on regional languages such as Assamese and Hindi).
 
