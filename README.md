@@ -24,6 +24,27 @@ This repository contains both the **Frontend Web Application** (React 19 + TypeS
 - **Flexible Offline/Online Modes**:
   - Toggle between instant standalone offline mock mode (Zustand-backed) and real FastAPI backend integration via simple `.env.local` config.
 
+## 📸 Application Screenshots
+
+<details>
+<summary>Click here to view all application screenshots</summary>
+
+<img width="1919" height="903" alt="image" src="https://github.com/user-attachments/assets/fc2a8dbc-fd01-49c6-8cdd-074b2b6f45ef" />
+<img width="1919" height="904" alt="image" src="https://github.com/user-attachments/assets/6169385e-90d3-4beb-9d7a-c5fee00213c1" />
+<img width="1920" height="903" alt="image" src="https://github.com/user-attachments/assets/34fe5396-1e7b-4e82-a175-2a7d6247d7db" />
+<img width="1918" height="847" alt="image" src="https://github.com/user-attachments/assets/b96268c2-6b36-4403-a3d5-4dfc5f7ae95f" />
+<img width="1916" height="904" alt="image" src="https://github.com/user-attachments/assets/60841a52-c1b5-48a8-a57a-d795bc333454" />
+<img width="1920" height="899" alt="image" src="https://github.com/user-attachments/assets/fa2ae933-4656-4b46-9c66-b425b7be7790" />
+<img width="1920" height="900" alt="image" src="https://github.com/user-attachments/assets/0801f519-988e-4e4a-9c1d-9f8c584418c0" />
+<img width="1919" height="882" alt="image" src="https://github.com/user-attachments/assets/e9bf027a-a311-4a2d-a348-5fc3baa5d1c6" />
+<img width="1915" height="855" alt="image" src="https://github.com/user-attachments/assets/c245221e-a1bc-4b86-b497-9c1a5be279fe" />
+<img width="1920" height="891" alt="image" src="https://github.com/user-attachments/assets/af9cf953-484b-48d7-abfb-0202cf81fb82" />
+
+
+
+</details>
+
+
 ### 🧠 Backend & AI Capabilities
 - **Multi-Role Conversational AI Companion**:
   - Role-tailored prompts for Patients, Caregivers, and Health Workers with patient memory graph and context awareness.
