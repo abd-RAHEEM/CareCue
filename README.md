@@ -200,5 +200,4 @@ npm run build
 ---
 
 ## 📄 License & Notes
-- Built for Smart India Hackathon (SIH) 2026.
 - Disclaimer: CareCue is an assistive care support and cognitive stimulation platform designed to aid individuals, families, and healthcare providers.
